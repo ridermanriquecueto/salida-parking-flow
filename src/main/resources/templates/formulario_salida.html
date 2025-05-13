@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Salida</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f6f8; /* Gris claro elegante */
+            color: #333; /* Texto principal gris oscuro */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna */
+        }
+
+        .confirmar-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #e74c3c; /* Rojo para indicar precaución */
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 4px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9em;
+            border: none;
+        }
+
+        .btn-warning { /* Ya definido en style.css, pero lo incluyo por claridad */
+            background-color: #f39c12; /* Naranja para advertencia */
+            color: #fff;
+        }
+
+        .btn-warning:hover {
+            background-color: #e68a00;
+        }
+
+        .btn-secondary { /* Ya definido en style.css */
+            background-color: #777; /* Gris elegante para cancelar */
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmar-container">
+        <h1>Confirmar Salida</h1>
+        <p th:text="'¿Está seguro de registrar la salida del vehículo con placa: ' + ${estacionamiento.placa} + '?'"></p>
+
+        <form th:action="@{/registrar_salida}" method="post">
+            <input type="hidden" name="id" th:value="${estacionamiento.id}">
+            <button type="submit" class="btn btn-warning">Confirmar Salida</button>
+            <a th:href="@{/resumen}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

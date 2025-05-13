@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprobante de Estacionamiento</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>¡Registro Exitoso!</h1>
+
+    <div id="comprobante">
+        <p><strong>Placa:</strong> <span th:text="${estacionamiento.placa}"></span></p>
+        <p><strong>Tipo de Servicio:</strong> <span th:text="${estacionamiento.tipoServicio}"></span></p>
+        <p><strong>Hora de Entrada:</strong> <span th:text="${#temporals.format(estacionamiento.horaEntrada, 'HH:mm:ss dd-MM-yyyy')}"></span></p>
+        <p><strong>Horas de Estacionamiento:</strong> <span th:text="${estacionamiento.horas}"></span></p>
+        <p><strong>Total a Pagar:</strong> <span th:text="${estacionamiento.total}"></span> ARS</p>
+        <p><strong>Descuento Aplicado:</strong> <span th:text="${estacionamiento.descuento}"></span> ARS</p>
+        <br>
+        <p><strong>¡Gracias por su visita!</strong></p>
+        <p><strong>¡Vuelva pronto!</strong></p>
+    </div>
+
+    <br>
+
+    <button onclick="window.print()">Imprimir Comprobante</button>
+
+    <br><br>
+
+    <a href="/formulario">Registrar otro vehículo</a>
+    <br>
+    <a href="/resumen">Ver Resumen de Estacionamientos</a>
+</body>
+</html>

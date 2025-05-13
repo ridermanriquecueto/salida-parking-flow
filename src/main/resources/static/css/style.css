@@ -1,0 +1,77 @@
+
+        /* Estilos básicos para la tabla - podrías moverlos a tu style.css */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            user-select: none;
+            text-decoration: none; /* Añadido para evitar subrayado en los enlaces */
+        }
+        .btn-warning {
+            color: #fff;
+            background-color: #f0ad4e;
+            border-color: #eea236;
+        }
+        .btn-warning:hover {
+            background-color: #ed980f;
+            border-color: #d58512;
+        }
+        .btn-info {
+            color: #fff;
+            background-color: #5bc0de;
+            border-color: #46b8da;
+        }
+        .btn-info:hover {
+            background-color: #31b0d5;
+            border-color: #269abc;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+        .text-success {
+            color: #5cb85c;
+        }
+        .pagination {
+            margin-top: 15px;
+        }
+        .pagination a {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #337ab7;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #eee;
+        }
+        .pagination a.active {
+            background-color: #337ab7;
+            color: white;
+        }
+   

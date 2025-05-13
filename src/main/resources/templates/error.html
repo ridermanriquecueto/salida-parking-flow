@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Estacionamientos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .text-success {
+            color: green;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .text-danger {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .pagination {
+            margin-top: 15px;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 6px 10px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination span {
+            background-color: #f0f0f0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1 th:if="${mensaje}" class="text-success" th:text="${mensaje}"></h1>
+    <h1 th:if="${error}" class="text-danger" th:text="${error}"></h1>
+
+    <h1>Resumen de Estacionamientos del Día</h1>
+
+    <form th:action="@{/resumen}" method="get">
+        <label for="fecha">Filtrar por fecha:</label>
+        <input type="date" id="fecha" name="fecha" th:value="${fechaConsulta}">
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <div th:if="${not #lists.isEmpty(registros)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placa</th>
+                    <th>Nombre Cliente</th>
+                    <th>Hora de Entrada</th>
+                    <th>Hora de Salida</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Horas Estacionadas</th>
+                    <th>Total a Pagar</th>
+                    <th>Acciones</th>
+                    <th>Comprobante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="registro : ${registros}">
+                    <td th:text="${registro.id}"></td>
+                    <td th:text="${registro.placa}"></td>
+                    <td th:text="${registro.nombreCliente}"></td>
+                    <td th:text="${#temporals.format(registro.horaEntrada, 'HH:mm')}"></td>
+                    <td th:text="${registro.horaSalida != null ? #temporals.format(registro.horaSalida, 'HH:mm') : 'N/A'}"></td>
+                    <td th:text="${registro.tipoServicio}"></td>
+                    <td th:text="${registro.horas}"></td>
+                    <td th:text="${#numbers.formatDecimal(registro.total, 0, 'POINT', 2, 'COMMA')}"></td>
+                    <td>
+                        <a th:if="${registro.horaSalida == null}" th:href="@{/salida/{id}(id=${registro.id})}" class="btn btn-warning btn-sm">Registrar Salida</a>
+                        <span th:unless="${registro.horaSalida == null}" class="text-success">Salida registrada</span>
+                    </td>
+                    <td>
+                        <a th:href="@{/comprobante/{id}(id=${registro.id})}" class="btn btn-info btn-sm">Ver</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Total del Día: <span th:text="${#numbers.formatDecimal(totalRecaudado, 0, 'POINT', 2, 'COMMA')}"></span> ARS</h3>
+
+        <div th:if="${totalPages > 1}" class="pagination">
+            <span>Páginas:</span>
+            <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+               th:href="@{/resumen(page=${i}, size=${#request.getParameter('size')}, fecha=${fechaConsulta})}"
+               th:text="${i + 1}"
+               th:classappend="${currentPage == i ? 'active' : ''}"></a>
+        </div>
+    </div>
+
+    <div th:unless="${not #lists.isEmpty(registros)}">
+        <p>No se encontraron estacionamientos para la fecha seleccionada.</p>
+    </div>
+
+    <br>
+    <button id="generarPDFResumen" class="btn btn-secondary">Generar PDF del Resumen</button>
+    <br>
+    <a th:href="@{/formulario}" class="btn btn-primary">Registrar nuevo vehículo</a>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.getElementById("generarPDFResumen").addEventListener("click", function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const fechaConsulta = /*[[${fechaConsulta}]]*/ 'N/A';
+            const registros = /*[[${registros}]]*/ [];
+
+            doc.setFontSize(14);
+            doc.text(`Resumen de Estacionamientos - Fecha: ${fechaConsulta}`, 20, 20);
+
+            let y = 30;
+            doc.setFontSize(10);
+            doc.text("ID | Placa | Cliente | Entrada | Salida | Horas | Total (ARS)", 20, y);
+            y += 10;
+
+            registros.forEach(registro => {
+                const entrada = registro.horaEntrada ? new Date(registro.horaEntrada).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+                const salida = registro.horaSalida ? new Date(registro.horaSalida).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+                const texto = `${registro.id} | ${registro.placa} | ${registro.nombreCliente} | ${entrada} | ${salida} | ${registro.horas} | ${registro.total}`;
+                doc.text(texto, 20, y);
+                y += 7;
+            });
+
+            y += 10;
+            const totalRecaudado = /*[[${#numbers.formatDecimal(totalRecaudado, 0, 'POINT', 2, 'COMMA')}]]*/ '0.00';
+            doc.setFontSize(12);
+            doc.text(`Total Recaudado: ${totalRecaudado} ARS`, 20, y);
+
+            doc.save(`resumen_estacionamientos_${fechaConsulta}.pdf`);
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprobante de Salida</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>¡Salida Registrada!</h1>
+    <div id="comprobante">
+        <p><strong>Placa:</strong> <span th:text="${estacionamiento.placa}"></span></p>
+        <p><strong>Hora de Entrada:</strong> <span th:text="${#temporals.format(estacionamiento.horaEntrada, 'HH:mm:ss dd-MM-yyyy')}"></span></p>
+        <p><strong>Hora de Salida:</strong> <span th:text="${#temporals.format(estacionamiento.horaSalida, 'HH:mm:ss dd-MM-yyyy')}"></span></p>
+        <p><strong>Duración:</strong>
+            <span th:if="${estacionamiento.tipoServicio == 'hora'}">
+                <span th:text="${estacionamiento.horas}"></span> horas
+            </span>
+            <span th:unless="${estacionamiento.tipoServicio == 'hora'}">
+                N/A
+            </span>
+        </p>
+        <p><strong>Total a Pagar:</strong> <span th:text="${estacionamiento.total}"></span> ARS</p>
+        <p><strong>Descuento Aplicado:</strong> <span th:text="${estacionamiento.descuento}"></span> ARS</p>
+        <br>
+        <p><strong>¡Gracias por su visita!</strong></p>
+        <p><strong>¡Vuelva pronto!</strong></p>
+    </div>
+    <br>
+    <button onclick="window.print()">Imprimir Comprobante de Salida</button>
+    <br><br>
+    <a href="/formulario">Registrar Nuevo Vehículo</a>
+    <br>
+    <a href="/resumen">Ver Resumen Diario</a>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Estacionamientos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna */
+            margin: 20px;
+            background-color: #f4f6f8; /* Gris claro elegante */
+            color: #333; /* Texto principal gris oscuro */
+        }
+
+        h1 {
+            color: #2c3e50; /* Azul oscuro elegante para el título */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .text-success {
+            color: #2ecc71; /* Verde para éxito */
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .text-danger {
+            color: #e74c3c; /* Rojo para error */
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff; /* Fondo blanco para la tabla */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            border-radius: 8px;
+            overflow: hidden; /* Para bordes redondeados en la tabla */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px; /* Más padding */
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            color: #2c3e50; /* Azul oscuro para encabezados */
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9; /* Hover suave en filas */
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 10px; /* Espacio entre botones */
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-warning {
+            background-color: #f39c12; /* Naranja para advertencia */
+            color: #fff;
+        }
+
+        .btn-warning:hover {
+            background-color: #e68a00;
+        }
+
+        .btn-info {
+            background-color: #3498db; /* Azul brillante para info */
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #777; /* Gris elegante para secundario */
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        .btn-primary {
+            background-color: #2c3e50; /* Azul oscuro elegante para primario */
+        }
+
+        .btn-primary:hover {
+            background-color: #3498db;
+        }
+
+        /* Estilo específico para el botón de Generar PDF */
+        #generarPDFResumen {
+            background-color: #e67e22; /* Un naranja diferente para destacar */
+        }
+
+        #generarPDFResumen:hover {
+            background-color: #d35400;
+        }
+
+        /* Espacio entre el botón de PDF y el de Nuevo Vehículo */
+        .botones-acciones {
+            margin-bottom: 20px; /* Espacio debajo del grupo de botones */
+            text-align: center; /* Centrar los botones si están en la misma línea */
+        }
+
+        /* Si los botones no están naturalmente en línea, podrías ajustar esto */
+        .botones-acciones button {
+            margin: 0 10px 10px 0; /* Margen derecha e inferior para separación */
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center; /* Centrar la paginación */
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background-color: #f0f0f0;
+            border-color: #bbb;
+        }
+
+        .pagination a.active {
+            background-color: #2c3e50; /* Azul oscuro para la página activa */
+            color: white;
+            border-color: #2c3e50;
+        }
+
+        .pagination span {
+            background-color: #f9f9f9;
+        }
+
+        .resumen-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .resumen-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #3498db; /* Azul brillante para los enlaces */
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .resumen-links a:hover {
+            color: #2c3e50;
+        }
+
+        /* Estilos para los comprobantes (asumiendo que están en una lista o div) */
+        .comprobantes-lista {
+            text-align: center; /* Centrar la lista de comprobantes */
+            margin-top: 20px;
+        }
+
+        .comprobantes-lista a {
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #555;
+            margin: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .comprobantes-lista a:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <h1 th:if="${mensaje}" class="text-success" th:text="${mensaje}"></h1>
+    <h1 th:if="${error}" class="text-danger" th:text="${error}"></h1>
+
+    <h1 th:text="${tituloResumen ?: 'Resumen de Estacionamientos'}">Resumen de Estacionamientos</h1>
+
+     <div class="resumen-links">
+        <a th:href="@{/resumen}">Resumen General</a> |
+        <a th:href="@{/resumen/dia}">Resumen del Día</a> |
+        <a th:href="@{/resumen/noche}">Resumen de la Noche</a>
+    </div>
+    <form th:action="@{/resumen}" method="get">
+        <label for="fecha">Filtrar por fecha:</label>
+        <input type="date" id="fecha" name="fecha" th:value="${fechaConsulta}">
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <div class="botones-acciones">
+        <button id="generarPDFResumen" class="btn btn-secondary">Generar PDF del Resumen</button>
+        <button id="registrarNuevoBtn" class="btn btn-primary" onclick="window.location.href='/formulario'">Registrar nuevo vehículo</button>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(registros)}">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placa</th>
+                    <th>Nombre Cliente</th>
+                    <th>Hora de Entrada</th>
+                    <th>Hora de Salida</th>
+                    <th>Tipo de Servicio</th>
+                    <th>Horas Estacionadas</th>
+                    <th>Total a Pagar</th>
+                    <th>Acciones</th>
+                    <th>Comprobante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="registro : ${registros}">
+                    <td th:text="${registro.id}"></td>
+                    <td th:text="${registro.placa}"></td>
+                    <td th:text="${registro.nombreCliente}"></td>
+                    <td th:text="${#temporals.format(registro.horaEntrada, 'HH:mm')}"></td>
+                    <td th:text="${registro.horaSalida != null ? #temporals.format(registro.horaSalida, 'HH:mm') : 'N/A'}"></td>
+                    <td th:text="${registro.tipoServicio}"></td>
+                    <td th:text="${registro.horas}"></td>
+                    <td th:text="${#numbers.formatDecimal(registro.total, 0, 'POINT', 2, 'COMMA')}"></td>
+                    <td>
+                        <a th:if="${registro.horaSalida == null}" th:href="@{/salida/{id}(id=${registro.id})}" class="btn btn-warning btn-sm">Registrar Salida</a>
+                        <span th:unless="${registro.horaSalida == null}" class="text-success">Salida registrada</span>
+                    </td>
+                    <td>
+                        <a th:if="${registro.horaSalida == null}" th:href="@{/comprobante/{id}(id=${registro.id})}" class="btn btn-info btn-sm">Ver</a>
+                        <a th:unless="${registro.horaSalida == null}" th:href="@{/comprobante/salida/{id}(id=${registro.id})}" class="btn btn-info btn-sm">Ver</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Total Recaudado: <span th:text="${#numbers.formatDecimal(totalRecaudado, 0, 'POINT', 2, 'COMMA')}"></span> ARS</h3>
+
+        <div th:if="${totalPages > 1}" class="pagination">
+            <span>Páginas:</span>
+            <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:href="@{/resumen(page=${i}, size=${#request.getParameter('size')}, fecha=${fechaConsulta})}"
+                th:text="${i + 1}"
+                th:classappend="${currentPage == i ? 'active' : ''}"></a>
+        </div>
+    </div>
+
+    <div th:unless="${not #lists.isEmpty(registros)}">
+        <p>No se encontraron estacionamientos.</p>
+    </div>
+
+    <hr/>
+
+    <div class="comprobantes-lista">
+        <a href="#">Comprobante 1</a>
+        <a href="#">Comprobante 2</a>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.getElementById("generarPDFResumen").onclick = function () {
+            const doc = new jspdf.jsPDF();
+            doc.text(document.querySelector('h1').textContent, 20, 20);
+            doc.autoTable({ html: 'table' });
+            doc.save("resumen_estacionamientos.pdf");
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

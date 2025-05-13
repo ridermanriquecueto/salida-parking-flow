@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Inicio</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .presentation-image {
+            max-width: 100%;
+            width: 500px;
+            height: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 20px;
+        }
+
+        .option-button {
+            display: inline-block;
+            padding: 15px 30px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .option-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        .option-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: text-decoration 0.3s;
+        }
+
+        .option-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-image {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .option-button {
+                padding: 12px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido al Sistema de Estacionamiento</h1>
+
+        <img src="/images/parking_presentation.jpg" alt="Imagen de Presentación del Estacionamiento" class="presentation-image">
+
+        <p>Seleccione una opción para continuar:</p>
+        <ul class="options-list">
+            <li><a href="/formulario" class="option-button">Registrar Nuevo Vehículo</a></li>
+            <li><a href="/resumen" class="option-button">Ver Resumen de Estacionamientos</a></li>
+            <li><a href="/otra-funcionalidad" class="option-link">Otra Funcionalidad</a></li>
+        </ul>
+    </div>
+</body>
+</html>
