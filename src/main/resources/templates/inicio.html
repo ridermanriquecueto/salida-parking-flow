@@ -11,84 +11,122 @@
             background-color: #f4f7fb;
             margin: 0;
             padding: 0;
+            background-image: url('/images/parking_presentation.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .container {
             text-align: center;
             padding: 50px 20px;
+            background-color: transparent; /* Contorno transparente */
+            border-radius: 10px;
+            max-width: 800px;
+            /* SE AJUSTA EL MARGEN SUPERIOR A -50PX */
+            margin: -50px auto; /* Esto mueve todo el contenido del contenedor 50px hacia arriba */
+            box-shadow: none; /* Elimina la sombra del contorno */
         }
 
         h1 {
-            color: #333;
+            color: #2b4058;
             font-size: 2.5rem;
-            margin-bottom: 30px;
+            margin-bottom: -5px;
             font-weight: 600;
         }
 
         .presentation-image {
-            max-width: 100%;
-            width: 500px;
-            height: auto;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none; /* Oculta la imagen original */
         }
 
         p {
-            color: #555;
+            color: #333333;
             font-size: 1.1rem;
-            margin-bottom: 20px;
+            margin-bottom: 0px; /* Elimina el espacio entre el párrafo y los botones */
+            line-height: 1.6;
         }
 
         .options-list {
             list-style: none;
             padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px; /* Espacio entre los botones */
         }
 
         .options-list li {
-            margin-bottom: 20px;
+            margin-bottom: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+            min-width: 200px; /* Ancho mínimo para cada botón (ajusta si es necesario) */
+            max-width: 300px; /* Ancho máximo para cada botón (ajusta si es necesario) */
         }
 
-        .option-button {
-            display: inline-block;
-            padding: 15px 30px;
+        .option-button,
+        .option-link {
+            display: block;
+            width: 100%;
+            padding: 15px 15px; /* Padding horizontal reducido para más espacio */
             text-decoration: none;
             color: white;
-            background-color: #007bff;
+            background-color: #2b4058;
             border-radius: 50px;
             font-size: 1.1rem;
             font-weight: 600;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .option-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
-
-        .option-link {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: text-decoration 0.3s;
-        }
-
+        .option-button:hover,
         .option-link:hover {
-            text-decoration: underline;
+            background-color: #d6790e;
+            transform: translateY(-3px);
+            text-decoration: none;
         }
 
+        /* Media Queries para responsividad */
         @media (max-width: 768px) {
-            .presentation-image {
-                width: 90%;
+            .container {
+                /* Ajusta el margen superior para que se vea bien en móviles también */
+                margin: -20px auto; /* Un valor negativo menor para móviles */
+                padding: 30px 15px;
             }
 
             h1 {
                 font-size: 2rem;
             }
 
-            .option-button {
-                padding: 12px 24px;
+            p {
+                font-size: 1rem;
+                margin-bottom: 0px;
+            }
+
+            .option-button,
+            .option-link {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .options-list {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .options-list li {
+                max-width: 90%;
             }
         }
     </style>
@@ -99,7 +137,11 @@
 
         <img src="/images/parking_presentation.jpg" alt="Imagen de Presentación del Estacionamiento" class="presentation-image">
 
-        <p>Seleccione una opción para continuar:</p>
+        <p>
+            ¡Gestiona tu estacionamiento de forma eficiente y sencilla! 
+            Nuestro sistema te permite registrar vehículos, controlar los tiempos de estacionamiento 
+            y obtener resúmenes detallados de la actividad.
+        </p>
         <ul class="options-list">
             <li><a href="/formulario" class="option-button">Registrar Nuevo Vehículo</a></li>
             <li><a href="/resumen" class="option-button">Ver Resumen de Estacionamientos</a></li>
